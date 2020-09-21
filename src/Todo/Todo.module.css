@@ -1,0 +1,38 @@
+.Todo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 10pt;
+    width: 20rem;
+    text-align: justify;
+    padding: 20pt;
+    background-color: wheat;
+}
+
+.Todo p {
+    word-wrap: break-word;
+    width: 80%;
+    color: black;
+    font-size: larger;
+}
+
+.Todo h1 {
+    word-wrap: break-word;
+}
+
+.Todo button {
+    background: none;
+    border: none;
+    color: salmon;
+    font-family: 'Indie Flower', cursive;
+    font-weight: bolder;
+    cursor: pointer;
+    outline-style: none;
+}
+
+.Todo button:hover {
+    color: red;
+}

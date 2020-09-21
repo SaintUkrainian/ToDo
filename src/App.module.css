@@ -1,0 +1,54 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Indie Flower', cursive;
+  background-color: rgb(20, 63, 156);
+  height: 100vh;
+}
+
+.SetTodo {
+  display: flex;
+  margin: auto;
+  margin-top: 0px;
+  flex-direction: column;
+  width: 20rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: wheat;
+}
+
+.SetTodo textarea {
+  font-family: 'Indie Flower', cursive;
+  height: 7rem;
+  margin: 4pt;
+  border-radius: 10px;
+  border: 2px solid black;
+  border-bottom: 1px solid black;
+  outline-style: none;
+}
+
+.SetTodo input {
+  font-family: 'Indie Flower', cursive;
+  margin: 4pt;
+  border-radius: 10px;
+  border-bottom: 1px solid black;
+  outline-style: none;
+}
+
+.SetTodo button {
+  font-family: 'Indie Flower', cursive;
+  font-weight: bold;
+  margin: 4pt;
+  border-radius: 10px;
+  border-bottom: 1px solid black;
+  outline-style: none;
+}
+
+.Todos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgb(20, 63, 156);
+  color: black;
+}
