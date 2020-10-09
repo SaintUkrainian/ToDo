@@ -101,7 +101,7 @@ function App() {
 
     return (
         <div className={styles.App}>
-            <h1>Your Todos</h1>
+            <h1 style={{color: "white"}}>Your Todos</h1>
             <h3 style={warnStyle}>{warning.message}</h3>
             <div className={styles.SetTodo}>
                 <input
