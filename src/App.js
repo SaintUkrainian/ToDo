@@ -1,124 +1,86 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 import Todo from "./Todo/Todo.js";
+import "./App.css";
 
-import styles from "./App.module.css";
+import TransitionGroup from "react-transition-group/TransitionGroup"
+import CSSTransition from "react-transition-group/CSSTransition";
 
 function App() {
-    let todoItems = null;
+    const [todo, setTodo] = useState({
+        aim: "",
+        description: "",
+    });
 
-    const warnStyle = {
-        color: "salmon",
-        textDecoration: "underline",
+    const [todos, setTodos] = useState([]);
+
+    const handleInput = (event, element) => {
+        setTodo({
+                ...todo,
+                [element]: event.target.value,
+            }
+        )
     };
 
-    const [todoList, setTodoList] = useState({
-        todos: [],
-    });
-
-    const [aim, setAim] = useState({
-        text: "",
-    });
-    
-    const [description, setDescription] = useState({
-        text: "",
-    });
-
-    const [warning, setWarning] = useState({
-        message: null,
-    });
-
-
-    const aimHandler = (event) => {
-        setWarning({
-            message: null,
+    const clearTodo = () => {
+        setTodo({
+            aim: "",
+            description: "",
         });
-        setAim({
-            text: event.target.value,
-        });
-    };
+    }
 
-    const descriptionHandler = (event) => {
-        setWarning({
-            message: null,
-        });
-        setDescription({
-            text: event.target.value,
-        });
-    };
-
-    const addTodoHandler = () => {
-        if (!aim.text || !description.text) {
-            setWarning({
-                message: "Fill in all fields",
-            });
+    const addTodo = () => {
+        if (!todo.aim || !todo.description) {
             return;
         }
-        const temp = [...todoList.todos];
-        temp.push({
-            aim: aim.text,
-            description: description.text,
-            key: Math.random(),
-        });
-        setTodoList({
-            todos: temp,
-        });
-        setAim({
-            text: "",
-        });
-        setDescription({
-            text: "",
-        });
-    };
+        setTodos(prevState => prevState.concat({
+            id: Math.random(),
+            done: false,
+            aim: todo.aim,
+            description: todo.description
+        }));
+        clearTodo();
+    }
 
+    const deleteTodo = (id) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+    }
 
-    const deleteHandler = (key) => {
-      const tempArray = [...todoList.todos];
-      const index = tempArray.findIndex(item => item.key === key)
-      tempArray.splice(index, 1);
-      setTodoList({
-          todos: tempArray,
-      });
-      console.log("Removed!");
-    };
-
-    if (todoList.todos.length > 0) {
-        todoItems = (
-            <div className={styles.Todos}>
-                {todoList.todos.map((todo, key) => {
-                    return (
-                        <Todo
-                            aim={todo.aim}
-                            description={todo.description}
-                            key={todo.key}
-                            delete={(key) => deleteHandler(key)}
-                        />
-                    );
-                })}
-            </div>
-        );
+    const setDone = (id) => {
+        setTodos(todos.map(todo => todo.id === id ? {...todo, done: true} : todo));
     }
 
     return (
-        <div className={styles.App}>
+        <div className="App">
             <h1 style={{color: "white"}}>Your Todos</h1>
-            <h3 style={warnStyle}>{warning.message}</h3>
-            <div className={styles.SetTodo}>
+            <div className="SetTodo">
                 <input
                     type="text"
-                    onChange={(event) => aimHandler(event)}
+                    onChange={(event) => handleInput(event, "aim")}
                     placeholder="Your Aim"
-                    value={aim.text}
+                    value={todo.aim}
                 />
                 <textarea
                     type="text"
-                    onChange={(event) => descriptionHandler(event)}
+                    onChange={(event) => handleInput(event, "description")}
                     placeholder="Description"
-                    value={description.text}
+                    value={todo.description}
+                    style={{height: 150}}
                 />
-                <button onClick={addTodoHandler}>Add TODO</button>
+                <button onClick={addTodo}>Add TODO</button>
             </div>
-            {todoItems}
+            <TransitionGroup component="div" className="Todos">
+                {todos.map(todo =>
+                    <CSSTransition classNames="fade" timeout={300}
+                                   key={todo.id}>
+                        <Todo key={todo.id}
+                              todo={todo}
+                              done={todo.done}
+                              delete={() => deleteTodo(todo.id)}
+                              setDone={() => setDone(todo.id)}/>
+                    </CSSTransition>
+                )}
+            </TransitionGroup>
         </div>
     );
 }

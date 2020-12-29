@@ -9,9 +9,7 @@
 
 .SetTodo {
   display: flex;
-  margin: auto;
-  margin-bottom: 10px;
-  margin-top: 0px;
+  margin: 0 auto 10px;
   flex-direction: column;
   width: 20rem;
   border: 1px solid black;
@@ -27,14 +25,17 @@
   border: 2px solid black;
   border-bottom: 1px solid black;
   outline-style: none;
+  font-size: larger;
 }
 
 .SetTodo input {
   font-family: 'Indie Flower', cursive;
   margin: 4pt;
+  padding: 4px;
   border-radius: 10px;
   border-bottom: 1px solid black;
   outline-style: none;
+  font-size: larger;
 }
 
 .SetTodo button {
@@ -44,6 +45,11 @@
   border-radius: 10px;
   border-bottom: 1px solid black;
   outline-style: none;
+  font-size: larger;
+}
+
+.SetTodo button:hover {
+  background: #ccc;
 }
 
 .Todos {
@@ -52,4 +58,27 @@
   justify-content: flex-start;
   background-color: rgb(20, 63, 156);
   color: black;
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 0.3s ease-out;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease-out;
+}
+
+.fade-exit {
+  opacity: 1;
+  transition: all 0.3s ease-out;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease-out;
 }
