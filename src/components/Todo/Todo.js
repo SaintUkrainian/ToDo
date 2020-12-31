@@ -3,7 +3,6 @@ import React from "react";
 import "./Todo.css";
 
 const todo = (props) => {
-    console.log(props);
     return (
         <div className="Todo">
             <div>

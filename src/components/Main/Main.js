@@ -6,6 +6,7 @@ import CSSTransition from "react-transition-group/cjs/CSSTransition";
 import Todo from "../Todo/Todo";
 import "./Main.css";
 import {connect} from "react-redux";
+import {checkAuth} from "../../store/authReducer";
 
 function Main(props) {
     const [todo, setTodo] = useState({
@@ -13,29 +14,31 @@ function Main(props) {
         description: "",
         done: false,
     });
-    const {authenticated} = props;
+    const {authenticated, checkAuth, token, userId} = props;
     const [todos, setTodos] = useState([]);
     const [fetchingTodos, setFetchingTodos] = useState(true);
+
     useEffect(() => {
+        checkAuth();
         if (authenticated) {
-            axios.get("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos.json").then(response => {
-                const transformedTodos = [];
-                for (const todo in response.data) {
-                    const transformedTodo = {
-                        id: todo,
-                        ...response.data[todo],
+            if(userId && token) {
+                const queryParams = "auth=" + token + "&orderBy=" + '"userId"' + '&equalTo="' + userId + '"';
+                axios.get("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos.json?" + queryParams).then(response => {
+                    const transformedTodos = [];
+                    for (const todo in response.data) {
+                        const transformedTodo = {
+                            id: todo,
+                            ...response.data[todo],
+                        }
+                        transformedTodos.push(transformedTodo);
                     }
-                    transformedTodos.push(transformedTodo);
-                }
-                setTodos(transformedTodos);
-                setFetchingTodos(false);
-            }).catch(error => {
-            });
-        } else {
-
+                    setTodos(transformedTodos);
+                    setFetchingTodos(false);
+                }).catch(error => {
+                });
+            }
         }
-
-    }, [authenticated]);
+    }, [authenticated, checkAuth, token, userId]);
 
     const handleInput = (event, element) => {
         setTodo({
@@ -57,9 +60,12 @@ function Main(props) {
         if (!todo.aim || !todo.description) {
             return;
         }
-        axios.post("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos.json", todo).then(response => {
+        axios.post("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos.json", {
+            ...todo,
+            userId: props.userId,
+        }).then(response => {
             setTodos(prevState => prevState.concat({
-                id: response.data.id,
+                id: response.data.name,
                 aim: todo.aim,
                 description: todo.description,
                 done: false,
@@ -70,10 +76,13 @@ function Main(props) {
     }
 
     const deleteTodo = (id) => {
+        setTodos(prevState => prevState.map(todo => todo.id !== id ? todo : {
+            ...todo,
+            aim: "Deleting"
+        }));
         axios.delete("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos/" + id + ".json").then(response => {
-            console.log(response);
-        });
-        setTodos(prevState => prevState.filter(todo => todo.id !== id));
+            setTodos(prevState => prevState.filter(todo => todo.id !== id));
+        }).catch();
     }
 
     const setDone = (id) => {
@@ -85,7 +94,6 @@ function Main(props) {
             }
             return todo;
         }));
-        console.log(updatedTodo);
         axios
             .patch("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos/" + id + ".json",
                 {
@@ -93,7 +101,7 @@ function Main(props) {
                     description: updatedTodo.description,
                     done: updatedTodo.done
                 })
-            .then(response => console.log(response));
+            .then();
     }
 
     let itemToBeDisplayed = null;
@@ -151,7 +159,15 @@ function Main(props) {
 const mapStateToProps = state => {
     return {
         authenticated: state.authenticated,
+        token: state.token,
+        userId: state.userId,
     }
 }
 
-export default connect(mapStateToProps)(Main);
+const mapDispatchToProps = dispatch => {
+    return {
+        checkAuth: () => dispatch(checkAuth()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

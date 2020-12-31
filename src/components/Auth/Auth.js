@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import axios from "axios";
 import * as actions from "../../store/authReducer";
+import {Redirect} from "react-router";
 
 function Auth(props) {
 
@@ -14,6 +15,8 @@ function Auth(props) {
         passwordWrong: null,
         emailWrong: null,
     });
+
+    const [errorMsg, setErrorMsg] = useState("");
 
     const handleInput = (event, element) => {
         setUserData({
@@ -30,8 +33,17 @@ function Auth(props) {
 
     const authenticate = (event) => {
         event.preventDefault();
-        if (isValid("email", /.+.[a-z]+\.[a-z]{2,3}/) && isValid("password", /.{6,}/)) {
-            console.log(userData);
+        if (/.+.[a-z]+\.[a-z]{2,3}/.test(userData.email) && /.{6,}/.test(userData.password)) {
+            const url = props.toLogin
+                ? "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDtXkNYeovl9gqg1Fcv2M3AEwfj8Z22ZvA"
+                : "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDtXkNYeovl9gqg1Fcv2M3AEwfj8Z22ZvA";
+            axios.post(url, {
+                email: userData.email,
+                password: userData.password,
+                returnSecureToken: true
+            }).then(response => {
+                setCredentials(response.data.localId, response.data.idToken, response.data.expiresIn);
+            }).catch(error => setErrorMsg(props.toLogin ? "Invalid credentials!" : "User already exists!"));
         } else {
             if (!/.+.[a-z]+\.[a-z]{2,3}/.test(userData.email)) {
                 setUserData(prevState => {
@@ -49,27 +61,24 @@ function Auth(props) {
                     }
                 });
             }
-            console.log(userData);
         }
-        // if (props.toLogin) {
-        //     axios.get().then(response => {
-        //
-        //     }).catch();
-        // } else {
-        //     axios.get().then().catch();
-        // }
     }
 
-    const setCredentials = (userId, token) => {
-        props.setToken(token);
+    const setCredentials = (userId, token, expiresIn) => {
         props.setUserId(userId);
         props.setAuthenticated();
+        props.setToken(token);
+
         localStorage.setItem("userId", userId);
+        localStorage.setItem("token", token);
+        localStorage.setItem("expirationDate", expiresIn);
     }
 
     return (
         <div className={"Auth"}>
+            {props.authenticated ? <Redirect to={"/"} /> : null}
             <h1 style={{color: "white"}}>{props.toLogin ? "Login" : "Sign Up"}</h1>
+            {errorMsg ? <p style={{color: "salmon"}}>{errorMsg}</p> : null}
             <form onSubmit={(event) => authenticate(event)}
                   className={"AuthForm"}>
                 <input type="text" value={userData.email}
@@ -92,6 +101,7 @@ function Auth(props) {
 const mapStateToProps = state => {
     return {
         toLogin: state.toLogin,
+        authenticated: state.authenticated,
     }
 }
 
@@ -100,6 +110,7 @@ const mapDispatchToProps = dispatch => {
         setToken: (token) => dispatch(actions.setToken(token)),
         setUserId: (userId) => dispatch(actions.setUserId(userId)),
         setAuthenticated: () => dispatch(actions.setAuthenticated()),
+        logout: () => dispatch(actions.logout()),
     }
 }
 

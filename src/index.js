@@ -5,20 +5,19 @@ import App from './App';
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
 import * as serviceWorker from './serviceWorker';
-import {createStore, compose} from "redux";
+import {createStore, compose, applyMiddleware} from "redux";
+import thunk from "redux-thunk";
 import authStore from "./store/authStore";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(authStore, composeEnhancers());
+const store = createStore(authStore, composeEnhancers(applyMiddleware(thunk)));
 
 ReactDOM.render(
-    <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter basename="todo-app">
                 <App/>
             </BrowserRouter>
-        </Provider>
-    </React.StrictMode>,
+        </Provider>,
     document.getElementById('root')
 );
 

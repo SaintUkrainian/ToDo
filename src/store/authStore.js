@@ -22,7 +22,8 @@ const authStore = (state = initialState, action) => {
         case "set_toLogin": return {
             ...state,
             toLogin: action.value,
-        }
+        };
+        case "logout": return initialState;
         default: return state;
     }
 }
