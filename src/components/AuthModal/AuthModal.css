@@ -1,0 +1,33 @@
+.AuthModal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.3s ease-out;
+    height: 100%;
+    width: 100%;
+
+    position: fixed;
+}
+
+.form {
+    height: 400px;
+    width: 200px;
+    background: white;
+    margin: auto;
+}
+.show-enter {
+    transform: translateY(-100%);
+    transition: all 0.3s ease-out;
+}
+
+.show-enter-active {
+    transform: translateY(0);
+}
+
+.show-enter-done {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.show-exit-start {
+    background-color: rgba(0, 0, 0, 0);
+}
