@@ -1,0 +1,31 @@
+.Auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.AuthForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-family: inherit;
+    width: 300px;
+    margin: auto;
+    background-color: wheat;
+    height: 135px;
+    border-radius: 8px;
+}
+
+.AuthForm input {
+    margin: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    border: none;
+    background: none;
+    border-bottom: 2px solid black;
+}
+
+.auth-btn:hover {
+    color: #1ca91c;
+}

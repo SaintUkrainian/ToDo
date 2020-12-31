@@ -3,13 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {BrowserRouter} from "react-router-dom";
+import {Provider} from "react-redux";
 import * as serviceWorker from './serviceWorker';
+import {createStore, compose} from "redux";
+import authStore from "./store/authStore";
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(authStore, composeEnhancers());
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter basename="todo-app">
-            <App/>
-        </BrowserRouter>
+        <Provider store={store}>
+            <BrowserRouter basename="todo-app">
+                <App/>
+            </BrowserRouter>
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
 );

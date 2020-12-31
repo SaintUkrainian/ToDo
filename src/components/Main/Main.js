@@ -5,6 +5,7 @@ import TransitionGroup from "react-transition-group/cjs/TransitionGroup";
 import CSSTransition from "react-transition-group/cjs/CSSTransition";
 import Todo from "../Todo/Todo";
 import "./Main.css";
+import {connect} from "react-redux";
 
 function Main(props) {
     const [todo, setTodo] = useState({
@@ -12,17 +13,11 @@ function Main(props) {
         description: "",
         done: false,
     });
+    const {authenticated} = props;
     const [todos, setTodos] = useState([]);
     const [fetchingTodos, setFetchingTodos] = useState(true);
-    const [auth, setAuth] = useState({
-        showModal: false,
-        authenticated: true,
-        userId: null,
-    });
-
-
     useEffect(() => {
-        if (auth.authenticated) {
+        if (authenticated) {
             axios.get("https://todoapp-85a8f-default-rtdb.europe-west1.firebasedatabase.app/todos.json").then(response => {
                 const transformedTodos = [];
                 for (const todo in response.data) {
@@ -40,7 +35,7 @@ function Main(props) {
 
         }
 
-    }, [auth.authenticated]);
+    }, [authenticated]);
 
     const handleInput = (event, element) => {
         setTodo({
@@ -103,7 +98,7 @@ function Main(props) {
 
     let itemToBeDisplayed = null;
 
-    if (auth.authenticated) {
+    if (authenticated) {
         if (fetchingTodos) {
             itemToBeDisplayed = <Spinner/>;
         } else {
@@ -153,4 +148,10 @@ function Main(props) {
     );
 }
 
-export default Main;
+const mapStateToProps = state => {
+    return {
+        authenticated: state.authenticated,
+    }
+}
+
+export default connect(mapStateToProps)(Main);
