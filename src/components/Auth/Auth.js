@@ -33,19 +33,21 @@ function Auth(props) {
 
     const authenticate = (event) => {
         event.preventDefault();
-        if (/.+.[a-z]+\.[a-z]{2,3}/.test(userData.email) && /.{6,}/.test(userData.password)) {
+        const email = userData.email.trim();
+        const password = userData.password.trim();
+        if (/.+.[a-z]+\.[a-z]{2,3}/.test(email) && /.{6,}/.test(password)) {
             const url = props.toLogin
                 ? "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDtXkNYeovl9gqg1Fcv2M3AEwfj8Z22ZvA"
                 : "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDtXkNYeovl9gqg1Fcv2M3AEwfj8Z22ZvA";
             axios.post(url, {
-                email: userData.email,
-                password: userData.password,
+                email: email,
+                password: password,
                 returnSecureToken: true
             }).then(response => {
                 setCredentials(response.data.localId, response.data.idToken, response.data.expiresIn);
             }).catch(error => setErrorMsg(props.toLogin ? "Invalid credentials!" : "User already exists!"));
         } else {
-            if (!/.+.[a-z]+\.[a-z]{2,3}/.test(userData.email)) {
+            if (!/.+.[a-z]+\.[a-z]{2,3}/.test(email)) {
                 setUserData(prevState => {
                     return {
                         ...prevState,
@@ -53,7 +55,7 @@ function Auth(props) {
                     }
                 });
             }
-            if (!isValid(userData.password, /.{6,}/)) {
+            if (!isValid(password, /.{6,}/)) {
                 setUserData(prevState => {
                     return {
                         ...prevState,
