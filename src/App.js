@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 import "./App.css";
 
@@ -7,8 +7,10 @@ import NavBar from "./components/NavBar/NavBar";
 import Main from "./components/Main/Main";
 import {Route, Switch, Redirect} from "react-router";
 import Auth from "./components/Auth/Auth";
+import {checkAuth} from "./store/authActions";
+import {connect} from "react-redux"
 
-function App() {
+function App(props) {
 
     const [auth, setAuth] = useState({
         authenticated: true,
@@ -16,6 +18,11 @@ function App() {
         login: false,
     });
 
+    const {checkAuth} = props;
+
+    useEffect(() => {
+        checkAuth();
+    })
 
     return (
         <div className="App">
@@ -30,4 +37,10 @@ function App() {
     );
 }
 
-export default App;
+const mapDispatchToProps = dispatch  => {
+    return {
+        checkAuth: () => dispatch(checkAuth()),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(App);

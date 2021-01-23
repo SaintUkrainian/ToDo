@@ -2,7 +2,7 @@ import React from "react";
 
 import "./NavBar.css";
 import {NavLink} from "react-router-dom";
-import {setToLogin, logout} from "../../store/authReducer";
+import {setToLogin, logout} from "../../store/authActions";
 import {connect} from "react-redux";
 
 function NavBar(props) {

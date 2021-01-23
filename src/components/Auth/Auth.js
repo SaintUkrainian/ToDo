@@ -4,7 +4,7 @@ import "./Auth.css";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import axios from "axios";
-import * as actions from "../../store/authReducer";
+import * as actions from "../../store/authActions";
 import {Redirect} from "react-router";
 
 function Auth(props) {
@@ -71,9 +71,14 @@ function Auth(props) {
         props.setAuthenticated();
         props.setToken(token);
 
+
         localStorage.setItem("userId", userId);
         localStorage.setItem("token", token);
-        localStorage.setItem("expirationDate", expiresIn);
+
+        const expirationDate = new Date(
+            new Date().getTime() + expiresIn * 1000
+        );
+        localStorage.setItem("expirationDate", expirationDate);
     }
 
     return (

@@ -6,7 +6,7 @@ import CSSTransition from "react-transition-group/cjs/CSSTransition";
 import Todo from "../Todo/Todo";
 import "./Main.css";
 import {connect} from "react-redux";
-import {checkAuth} from "../../store/authReducer";
+import {checkAuth} from "../../store/authActions";
 
 function Main(props) {
     const [todo, setTodo] = useState({

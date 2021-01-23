@@ -1,66 +1,31 @@
-export const setAuthenticated = () => {
-    return {
-        type: "set_authenticated",
-    };
-};
-
-export const setUserId = (userId) => {
-    return {
-        type: "set_userId",
-        userId: userId,
-    };
-};
-
-export const setToken = (token) => {
-    return {
-        type: "set_token",
-        token: token,
-    };
+const initialState = {
+    authenticated: false,
+    userId: null,
+    token: null,
+    toLogin: false,
 }
 
-export const setToLogin = (value) => {
-    return {
-        type: "set_toLogin",
-        value: value,
-    };
-}
-
-export const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    return {
-        type: "logout",
+const authReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case "set_authenticated": return {
+            ...state,
+            authenticated: true,
+        };
+        case "set_token": return {
+            ...state,
+            token: action.token,
+        };
+        case "set_userId": return {
+            ...state,
+            userId: action.userId,
+        };
+        case "set_toLogin": return {
+            ...state,
+            toLogin: action.value,
+        };
+        case "logout": return initialState;
+        default: return state;
     }
 }
 
-export const checkAuthTimeout = (expirationTime) => {
-    return (dispatch) => {
-        setTimeout(() => dispatch(logout()), expirationTime * 1000);
-    };
-};
-
-export const checkAuth = () => {
-    return dispatch => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            dispatch(logout());
-        } else {
-            const userId = localStorage.getItem("userId");
-            const expirationDate = new Date(
-                localStorage.getItem("expirationDate")
-            );
-            if (expirationDate < new Date()) {
-                dispatch(logout());
-            } else {
-                dispatch(setToken(token));
-                dispatch(setUserId(userId));
-                dispatch(setAuthenticated());
-                // dispatch(
-                //     checkAuthTimeout(
-                //         (expirationDate.getTime() - new Date().getTime()) / 1000
-                //     )
-                // );
-            }
-        }
-    }
-}
+export default authReducer;
