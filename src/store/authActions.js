@@ -28,6 +28,7 @@ export const setToLogin = (value) => {
 export const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("expirationDate");
     return {
         type: "logout",
     }
