@@ -150,6 +150,7 @@ function Main(props) {
                 />
                 <button onClick={addTodo}>Add TODO</button>
             </div>
+            <hr width={"95%"}/>
             {itemToBeDisplayed}
         </React.Fragment>
 

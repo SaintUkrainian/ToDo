@@ -6,14 +6,13 @@
     border-radius: 10px;
     margin: 10pt auto auto;
     width: 16.5rem;
-    text-align: justify;
+    text-align: left;
     padding: 20pt;
     background-color: wheat;
     transition: all 0.3s ease-out;
 }
 
 .Todo p {
-    /*word-wrap: break-word;*/
     width: 100%;
     color: black;
     font-size: larger;
